@@ -1,7 +1,43 @@
 from django.shortcuts import render
 from .models import Post
 from marketing.models import Signup
+from django.views import generic
 
+
+
+
+class PostListView(generic.ListView):
+    model = Post
+    template_name = "index.html"
+    context_object_name = "object_list"
+
+    def get_queryset(self):
+        featured = Post.objects.filter(featured=True)
+        return featured
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        latest = Post.objects.order_by("-timestamp")[0:3]
+        context.update(
+            {
+                "latest":latest
+            }
+        )
+        
+        return context        
+    
+
+
+def blog(request):
+    return render(request, "blog.html")
+
+def post(request):
+    return render(request, "post.html")
+
+
+
+
+'''
 def index(request):
     featured = Post.objects.filter(featured=True)
     latest = Post.objects.order_by("-timestamp")[0:3]
@@ -17,9 +53,6 @@ def index(request):
         "latest":latest
     }
     return render(request, "index.html", context)
+    '''
 
-def blog(request):
-    return render(request, "blog.html")
 
-def post(request):
-    return render(request, "post.html")
