@@ -1,13 +1,14 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
-from posts.views import PostListView,blog,post
+from django.urls import path,include
+from posts.views import blog,post
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', PostListView.as_view(), name="index"),
-    #path('blog/', blog),
+    path('posts/', include("posts.urls", namespace="posts")),
+    path('blog/', blog),
     #path('post/', post),
 ]
 

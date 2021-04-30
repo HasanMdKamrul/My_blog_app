@@ -1,7 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect,reverse
 from .models import Post
 from marketing.models import Signup
 from django.views import generic
+from .forms import SigunupModelForm
+
 
 
 
@@ -14,6 +16,7 @@ class PostListView(generic.ListView):
     def get_queryset(self):
         featured = Post.objects.filter(featured=True)
         return featured
+            
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -25,8 +28,14 @@ class PostListView(generic.ListView):
         )
         
         return context        
-    
 
+class SignupCreateView(generic.CreateView):
+    model = Signup
+    template_name = "posts/test.html"
+    form_class = SigunupModelForm
+
+    def get_success_url(self):
+        return reverse('posts:index')
 
 def blog(request):
     return render(request, "blog.html")
