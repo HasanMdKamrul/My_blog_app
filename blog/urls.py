@@ -8,8 +8,8 @@ from posts.views import blog,post,index
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index , name= "index"),
-    path('blog/', blog),
-    path('post/', post),
+    path('blog/', blog, name = "post-list"),
+    path('post/<int:pk>/', post, name = "post-detail"),
 ]
 
 if settings.DEBUG:

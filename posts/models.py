@@ -25,6 +25,7 @@ class Post(models.Model):
     overview = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=False)
     comment_count = models.IntegerField(default=0)
+    view_count = models.IntegerField(default=0)
     author = models.ForeignKey("Author",on_delete=models.CASCADE)
     thumbnail = models.ImageField()
     catagories = models.ManyToManyField("Catagory")
