@@ -5,9 +5,36 @@ from django.views import generic
 from .forms import SigunupModelForm
 
 
+def index(request):
+    featured = Post.objects.filter(featured=True)
+    latest = Post.objects.order_by("-timestamp")[0:3]
+
+    if request.method=="POST":
+        email = request.POST["email"]
+        new_signup = Signup()
+        new_signup.email = email
+        new_signup.save()
+
+    context = {
+        "object_list":featured,
+        "latest":latest
+    }
+    return render(request, "index.html", context)
+    
 
 
+def blog(request):
+    post_list = Post.objects.all()
+    context = {
+        "post_list":post_list
+    }
+    return render(request, "blog.html" , context)
 
+def post(request):
+    return render(request, "post.html")
+
+
+'''
 class PostListView(generic.ListView):
     model = Post
     template_name = "index.html"
@@ -36,32 +63,4 @@ class SignupCreateView(generic.CreateView):
 
     def get_success_url(self):
         return reverse('posts:index')
-
-def blog(request):
-    return render(request, "blog.html")
-
-def post(request):
-    return render(request, "post.html")
-
-
-
-
 '''
-def index(request):
-    featured = Post.objects.filter(featured=True)
-    latest = Post.objects.order_by("-timestamp")[0:3]
-
-    if request.method=="POST":
-        email = request.POST["email"]
-        new_signup = Signup()
-        new_signup.email = email
-        new_signup.save()
-
-    context = {
-        "object_list":featured,
-        "latest":latest
-    }
-    return render(request, "index.html", context)
-    '''
-
-
