@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<h1> Here is the search result </h1>
+{% for queryset in queryset  %}
+    <a href="{% url 'post-detail' queryset.pk %}">
+        {{queryset.title}}
+    </a>
+    <br/>
+
+{% endfor %}
+  
+{% endblock content %}

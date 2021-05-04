@@ -1,4 +1,4 @@
-from django.db.models import Count
+from django.db.models import Count,Q
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 from django.shortcuts import render,redirect,reverse
 from .models import Post
@@ -6,6 +6,22 @@ from marketing.models import Signup
 from django.views import generic
 from .forms import SigunupModelForm
 
+
+def search(request):
+    queryset = Post.objects.all()
+    query = request.GET.get("q")
+
+    if query:
+        queryset = queryset.filter(
+            Q(title__icontains=query)|
+            Q(overview__icontains=query)
+        ).distinct()
+
+        context = {
+            "queryset":queryset,
+        }
+
+    return render(request, "search_results.html", context)
 
 def get_catagory_count():
     queryset = Post.objects.values('catagories__title').annotate(Count('catagories__title'))
