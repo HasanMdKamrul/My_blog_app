@@ -1,3 +1,4 @@
+from django.db.models import Count
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 from django.shortcuts import render,redirect,reverse
 from .models import Post
@@ -5,6 +6,10 @@ from marketing.models import Signup
 from django.views import generic
 from .forms import SigunupModelForm
 
+
+def get_catagory_count():
+    queryset = Post.objects.values('catagories__title').annotate(Count('catagories__title'))
+    return queryset
 
 def index(request):
     featured = Post.objects.filter(featured=True)
@@ -25,6 +30,7 @@ def index(request):
 
 
 def blog(request):
+    catagory_count = get_catagory_count()
     most_recent = Post.objects.order_by("-timestamp")[:3]
     post_list = Post.objects.all()
     paginator = Paginator(post_list, 1)
@@ -39,6 +45,7 @@ def blog(request):
         paginated_queryset = paginator.page(paginator.num_pages)
 
     context = {
+        "catagory_count":catagory_count,
         "queryset":paginated_queryset,
         "page_request_var":page_request_var,
         "most_recent":most_recent
